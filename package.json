@@ -1,0 +1,23 @@
+{
+  "name": "geo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@tmcw/togeojson": "^6.0.1",
+    "adm-zip": "^0.5.16",
+    "axios": "^1.8.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "fast-xml-parser": "^5.0.8",
+    "fs": "^0.0.1-security",
+    "geolib": "^3.3.4",
+    "jsdom": "^26.0.0"
+  }
+}
