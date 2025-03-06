@@ -1,6 +1,8 @@
 const { obtenerCoordenadas } = require("../services/geolocationService");
 const { encontrarRutaMasCercana } = require("../services/routeService");
 
+
+
 async function obtenerRuta(req, res) {
     const { direccion } = req.query;
 
@@ -11,13 +13,13 @@ async function obtenerRuta(req, res) {
     try {
         const coordenadas = await obtenerCoordenadas(direccion);
 
-        if (!coordenadas) {
-            return res.status(404).json({ error: `No se encontraron coordenadas para: ${direccion}` });
+        if (!coordenadas || typeof coordenadas.lat !== "number" || typeof coordenadas.lng !== "number") {
+            return res.status(404).json({ error: `No se encontraron coordenadas válidas para: ${direccion}` });
         }
 
         const resultadoRuta = encontrarRutaMasCercana(coordenadas);
 
-        if (!resultadoRuta) {
+        if (!resultadoRuta || resultadoRuta.error) {
             return res.status(404).json({ error: "No se encontró una ruta cercana." });
         }
 
@@ -26,11 +28,12 @@ async function obtenerRuta(req, res) {
             coordenadas_busqueda: coordenadas,
             ruta: resultadoRuta.ruta,
             coordenada_cercana: resultadoRuta.coordenadaCercana,
-            distancia: resultadoRuta.distancia.toFixed(4),
-            coordenadas_ruta: resultadoRuta.coordenadasRuta // ← AGREGAMOS ESTO
+            distancia: resultadoRuta.distancia ? resultadoRuta.distancia.toFixed(4) : null,
+            coordenadas_ruta: resultadoRuta.coordenadasRuta || []
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("❌ Error en obtenerRuta:", error);
+        res.status(500).json({ error: "Error interno del servidor." });
     }
 }
 
